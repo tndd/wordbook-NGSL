@@ -1,6 +1,19 @@
 import csv
 import sqlite3
 
+SQL_CREATE_TABLE = '''
+CREATE TABLE word(
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  type STRING,
+  word STRING,
+  translation STRING,
+  explanation STRING,
+  example STRING,
+  example_translation STRING,
+  pronunciation STRING,
+  meaning_in_english STRING
+)
+'''
 SQL_INSERTS = 'INSERT INTO word ("type", "word", "translation", "explanation", "example", "example_translation", "pronunciation", "meaning_in_english") VALUES(?, ?, ?, ?, ?, ?, ?, ?);'
 
 def read_values(d_type):
@@ -22,9 +35,9 @@ def read_bsl_values():
 db_path = 'db.sqlite'
 con = sqlite3.connect(db_path)
 cur = con.cursor()
+cur.execute(SQL_CREATE_TABLE)
 cur.executemany(SQL_INSERTS, read_values('ngsl'))
 cur.executemany(SQL_INSERTS, read_values('nawl'))
 cur.executemany(SQL_INSERTS, read_values('tsl'))
 cur.executemany(SQL_INSERTS, read_bsl_values())
-con.commit()
 con.close()
