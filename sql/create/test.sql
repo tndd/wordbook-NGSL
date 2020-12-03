@@ -1,8 +1,8 @@
 CREATE TABLE test (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  "timestamp" TEXT DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  class INTEGER NOT NULL,
-  version INTEGER NOT NULL,
+  version_id INTEGER NOT NULL,
   word_id INTEGER NOT NULL,
-  correct INTEGER NOT NULL
+  "timestamp" TEXT DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  correct INTEGER NOT NULL,
+  PRIMARY KEY(version_id, word_id),
+  foreign key(word_id) references word(id)
 );
