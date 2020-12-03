@@ -1,11 +1,11 @@
 CREATE TABLE word(
-  id INTEGER PRIMARY KEY AUTOINCREMENT  NOT NULL,
-  type STRING NOT NULL,
-  word STRING NOT NULL,
-  translation STRING NOT NULL,
-  explanation STRING NOT NULL,
-  example STRING NOT NULL,
-  example_translation STRING NOT NULL,
-  pronunciation STRING NOT NULL,
-  meaning_in_english STRING
+  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  type TEXT NOT NULL,
+  word TEXT NOT NULL,
+  translation TEXT NOT NULL,
+  explanation TEXT NOT NULL,
+  example TEXT NOT NULL,
+  example_translation TEXT NOT NULL,
+  pronunciation TEXT NOT NULL,
+  meaning_in_english TEXT
 );

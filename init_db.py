@@ -3,10 +3,14 @@ import sqlite3
 
 with open('sql/create/word.sql', 'r') as f:
   SQL_CREATE_WORD = f.read()
-with open('sql/insert/word.sql', 'r') as f:
-  SQL_INSERTS_WORD = f.read()
 with open('sql/create/test.sql') as f:
   SQL_CREATE_TEST = f.read()
+with open('sql/create/version_relation.sql') as f:
+  SQL_CREATE_VERSION_RELATION = f.read()
+with open('sql/create/version.sql', 'r') as f:
+  SQL_CREATE_VERSION = f.read()
+with open('sql/insert/word.sql', 'r') as f:
+  SQL_INSERTS_WORD = f.read()
 
 def read_values(d_type):
   values = []
@@ -24,6 +28,8 @@ con = sqlite3.connect(db_path)
 cur = con.cursor()
 cur.execute(SQL_CREATE_WORD)
 cur.execute(SQL_CREATE_TEST)
+cur.execute(SQL_CREATE_VERSION)
+cur.execute(SQL_CREATE_VERSION_RELATION)
 cur.executemany(SQL_INSERTS_WORD, read_values('ngsl'))
 cur.executemany(SQL_INSERTS_WORD, read_values('nawl'))
 cur.executemany(SQL_INSERTS_WORD, read_values('tsl'))

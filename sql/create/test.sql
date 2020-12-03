@@ -1,5 +1,5 @@
 CREATE TABLE test (
-  version_id INTEGER NOT NULL,
+  version_id TEXT NOT NULL,
   word_id INTEGER NOT NULL,
   "timestamp" TEXT DEFAULT CURRENT_TIMESTAMP NOT NULL,
   correct INTEGER NOT NULL,
