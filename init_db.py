@@ -2,9 +2,11 @@ import csv
 import sqlite3
 
 with open('sql/create/word.sql', 'r') as f:
-  SQL_CREATE_TABLE = f.read()
+  SQL_CREATE_WORD = f.read()
 with open('sql/insert/word.sql', 'r') as f:
-  SQL_INSERTS = f.read()
+  SQL_INSERTS_WORD = f.read()
+with open('sql/create/test.sql') as f:
+  SQL_CREATE_TEST = f.read()
 
 def read_values(d_type):
   values = []
@@ -20,10 +22,11 @@ def read_values(d_type):
 db_path = 'db.sqlite'
 con = sqlite3.connect(db_path)
 cur = con.cursor()
-cur.execute(SQL_CREATE_TABLE)
-cur.executemany(SQL_INSERTS, read_values('ngsl'))
-cur.executemany(SQL_INSERTS, read_values('nawl'))
-cur.executemany(SQL_INSERTS, read_values('tsl'))
-cur.executemany(SQL_INSERTS, read_values('bsl'))
+cur.execute(SQL_CREATE_WORD)
+cur.execute(SQL_CREATE_TEST)
+cur.executemany(SQL_INSERTS_WORD, read_values('ngsl'))
+cur.executemany(SQL_INSERTS_WORD, read_values('nawl'))
+cur.executemany(SQL_INSERTS_WORD, read_values('tsl'))
+cur.executemany(SQL_INSERTS_WORD, read_values('bsl'))
 con.commit()
 con.close()
