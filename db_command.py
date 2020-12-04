@@ -39,6 +39,8 @@ def get_queries():
     q['INSERT']['VERSION'] = f.read()
   with open('sql/insert/version_relation.sql', 'r') as f:
     q['INSERT']['VERSION_RELATION'] = f.read()
+  with open('sql/insert/test.sql', 'r') as f:
+    q['INSERT']['TEST'] = f.read()
   with open('sql/select/unanswered.sql', 'r') as f:
     q['SELECT']['UNANSWERED'] = f.read()
   with open('sql/select/incorrect.sql', 'r') as f:
@@ -112,10 +114,19 @@ def insert_child_version(parent_id, name):
   finally:
     connection.close()
 
+def insert_test_result(version_id, word_id, collect):
+  connection = get_connection()
+  cur = connection.cursor()
+  q = get_queries()
+  cur.execute(q['INSERT']['TEST'], (version_id, word_id, collect))
+  connection.commit()
+  connection.close()
+
 
 if __name__ == "__main__":
   # init_db()
   # resp = select_incorrect('6027924c-419f-40ae-8b83-454dfa6cd21a', 'ngsl')
   # print(resp)
   # insert_new_version('v1')
-  insert_child_version('1ea22bbb-76e7-44a2-90e0-67ed4ae195b1', 'v1_1')
+  # insert_child_version('1ea22bbb-76e7-44a2-90e0-67ed4ae195b1', 'v1_1')
+  insert_test_result('6027924c-419f-40ae-8b83-454dfa6cd21a', 3, 0)
