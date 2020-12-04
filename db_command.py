@@ -27,8 +27,15 @@ def get_queries():
     q['INSERTS_WORD'] = f.read()
   return q
 
-def init_db(connection, q):
-  cur = connection.cursor()
+def get_connection_exclusive():
+  db_path = 'db.sqlite'
+  return sqlite3.connect(db_path, isolation_level='EXCLUSIVE')
+
+# execute query
+def init_db():
+  conn_exclusive = get_connection_exclusive()
+  cur = conn_exclusive.cursor()
+  q = get_queries()
   try:
     cur.execute(q['CREATE_WORD'])
     cur.execute(q['CREATE_TEST'])
@@ -38,14 +45,12 @@ def init_db(connection, q):
     cur.executemany(q['INSERTS_WORD'], read_values('nawl'))
     cur.executemany(q['INSERTS_WORD'], read_values('tsl'))
     cur.executemany(q['INSERTS_WORD'], read_values('bsl'))
+    conn_exclusive.commit()
   except Exception as e:
     print(e)
-    connection.rollback()
+    conn_exclusive.rollback()
   finally:
-    connection.commit()
+    conn_exclusive.close()
 
 if __name__ == "__main__":
-  q = get_queries()
-  db_path = 'db.sqlite'
-  connection = sqlite3.connect(db_path, isolation_level='EXCLUSIVE')
-  init_db(connection, q)
+  init_db()
