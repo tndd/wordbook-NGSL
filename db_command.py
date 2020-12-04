@@ -27,11 +27,7 @@ def get_queries():
     q['INSERTS_WORD'] = f.read()
   return q
 
-if __name__ == "__main__":
-  # execute queries
-  q = get_queries()
-  db_path = 'db.sqlite'
-  connection = sqlite3.connect(db_path, isolation_level='EXCLUSIVE')
+def init_db(connection, q):
   cur = connection.cursor()
   try:
     cur.execute(q['CREATE_WORD'])
@@ -47,3 +43,9 @@ if __name__ == "__main__":
     connection.rollback()
   finally:
     connection.commit()
+
+if __name__ == "__main__":
+  q = get_queries()
+  db_path = 'db.sqlite'
+  connection = sqlite3.connect(db_path, isolation_level='EXCLUSIVE')
+  init_db(connection, q)
