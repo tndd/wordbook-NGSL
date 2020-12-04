@@ -1,2 +1,2 @@
-INSERT INTO test (class, version, word_id, correct) 
-VALUES(?, ?, ?, ?);
+INSERT INTO test (version_id, word_id, correct) 
+VALUES(?, ?, ?);
