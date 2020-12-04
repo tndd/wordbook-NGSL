@@ -74,7 +74,15 @@ def select_unanswered(version_id, type_):
   connection.close()
   return response
 
+def select_incorrect(version_id, type_):
+  connection = get_connection()
+  cur = connection.cursor()
+  q = get_queries()
+  response = cur.execute(q['SELECT']['INCORRECT'], (version_id, type_)).fetchall()
+  connection.close()
+  return response
+
 if __name__ == "__main__":
   # init_db()
-  resp = select_unanswered('6027924c-419f-40ae-8b83-454dfa6cd21a', 'ngsl')
+  resp = select_incorrect('6027924c-419f-40ae-8b83-454dfa6cd21a', 'ngsl')
   print(resp)
