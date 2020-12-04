@@ -125,8 +125,8 @@ def insert_test_result(version_id, word_id, collect):
 
 if __name__ == "__main__":
   # init_db()
-  # resp = select_incorrect('6027924c-419f-40ae-8b83-454dfa6cd21a', 'ngsl')
-  # print(resp)
+  resp = select_incorrect('6027924c-419f-40ae-8b83-454dfa6cd21a', 'ngsl')
+  print(resp)
   # insert_new_version('v1')
   # insert_child_version('1ea22bbb-76e7-44a2-90e0-67ed4ae195b1', 'v1_1')
-  insert_test_result('6027924c-419f-40ae-8b83-454dfa6cd21a', 3, 0)
+  # insert_test_result('6027924c-419f-40ae-8b83-454dfa6cd21a', 3, 0)
