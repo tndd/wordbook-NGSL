@@ -14,17 +14,22 @@ def read_values(d_type):
   return values
 
 def get_queries():
-  q = {}
+  q = {
+    'CREATE': {},
+    'INSERT': {},
+    'SELECT': {},
+    'DELETE': {}
+  }
   with open('sql/create/word.sql', 'r') as f:
-    q['CREATE_WORD'] = f.read()
+    q['CREATE']['WORD'] = f.read()
   with open('sql/create/test.sql') as f:
-    q['CREATE_TEST'] = f.read()
+    q['CREATE']['TEST'] = f.read()
   with open('sql/create/version_relation.sql') as f:
-    q['VERSION_RELATION'] = f.read()
+    q['CREATE']['VERSION_RELATION'] = f.read()
   with open('sql/create/version.sql', 'r') as f:
-    q['CREATE_VERSION'] = f.read()
+    q['CREATE']['VERSION'] = f.read()
   with open('sql/insert/word.sql', 'r') as f:
-    q['INSERTS_WORD'] = f.read()
+    q['INSERT']['WORD'] = f.read()
   return q
 
 def get_connection_exclusive():
@@ -37,14 +42,14 @@ def init_db():
   cur = conn_exclusive.cursor()
   q = get_queries()
   try:
-    cur.execute(q['CREATE_WORD'])
-    cur.execute(q['CREATE_TEST'])
-    cur.execute(q['CREATE_VERSION'])
-    cur.execute(q['CREATE_VERSION_RELATION'])
-    cur.executemany(q['INSERTS_WORD'], read_values('ngsl'))
-    cur.executemany(q['INSERTS_WORD'], read_values('nawl'))
-    cur.executemany(q['INSERTS_WORD'], read_values('tsl'))
-    cur.executemany(q['INSERTS_WORD'], read_values('bsl'))
+    cur.execute(q['CREATE']['WORD'])
+    cur.execute(q['CREATE']['TEST'])
+    cur.execute(q['CREATE']['VERSION'])
+    cur.execute(q['CREATE']['VERSION_RELATION'])
+    cur.executemany(q['INSERT']['WORD'], read_values('ngsl'))
+    cur.executemany(q['INSERT']['WORD'], read_values('nawl'))
+    cur.executemany(q['INSERT']['WORD'], read_values('tsl'))
+    cur.executemany(q['INSERT']['WORD'], read_values('bsl'))
     conn_exclusive.commit()
   except Exception as e:
     print(e)
