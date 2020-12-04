@@ -1,5 +1,6 @@
 import csv
 import sqlite3
+import uuid
 
 # consts
 DB_PATH = 'db.sqlite'
@@ -33,6 +34,8 @@ def get_queries():
     q['CREATE']['VERSION'] = f.read()
   with open('sql/insert/word.sql', 'r') as f:
     q['INSERT']['WORD'] = f.read()
+  with open('sql/insert/version.sql', 'r') as f:
+    q['INSERT']['VERSION'] = f.read()
   with open('sql/select/unanswered.sql', 'r') as f:
     q['SELECT']['UNANSWERED'] = f.read()
   with open('sql/select/incorrect.sql', 'r') as f:
@@ -42,13 +45,10 @@ def get_queries():
 def get_connection():
   return sqlite3.connect(DB_PATH)
 
-def get_connection_exclusive():
-  return sqlite3.connect(DB_PATH, isolation_level='EXCLUSIVE')
-
 # execute query methods
 def init_db():
-  conn_exclusive = get_connection_exclusive()
-  cur = conn_exclusive.cursor()
+  connection = get_connection()
+  cur = connection.cursor()
   q = get_queries()
   try:
     cur.execute(q['CREATE']['WORD'])
@@ -59,12 +59,12 @@ def init_db():
     cur.executemany(q['INSERT']['WORD'], read_values('nawl'))
     cur.executemany(q['INSERT']['WORD'], read_values('tsl'))
     cur.executemany(q['INSERT']['WORD'], read_values('bsl'))
-    conn_exclusive.commit()
+    connection.commit()
   except Exception as e:
     print(e)
-    conn_exclusive.rollback()
+    connection.rollback()
   finally:
-    conn_exclusive.close()
+    connection.close()
 
 def select_unanswered(version_id, type_):
   connection = get_connection()
@@ -82,7 +82,18 @@ def select_incorrect(version_id, type_):
   connection.close()
   return response
 
+def insert_new_version(name):
+  connection = get_connection()
+  cur = connection.cursor()
+  q = get_queries()
+  v_id = str(uuid.uuid4())
+  cur.execute(q['INSERT']['VERSION'], (v_id, name))
+  connection.commit()
+  cur.close()
+
+
 if __name__ == "__main__":
   # init_db()
-  resp = select_incorrect('6027924c-419f-40ae-8b83-454dfa6cd21a', 'ngsl')
-  print(resp)
+  # resp = select_incorrect('6027924c-419f-40ae-8b83-454dfa6cd21a', 'ngsl')
+  # print(resp)
+  insert_new_version('v1')
