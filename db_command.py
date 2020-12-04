@@ -1,6 +1,7 @@
 import csv
 import sqlite3
 import uuid
+import os
 
 # consts
 DB_PATH = 'db.sqlite'
@@ -49,6 +50,9 @@ def get_connection():
 
 # execute query methods
 def init_db():
+  if os.path.exists(DB_PATH):
+    print('Reset DB')
+    os.remove(DB_PATH)
   connection = get_connection()
   cur = connection.cursor()
   q = get_queries()
