@@ -1,7 +1,10 @@
 import csv
 import sqlite3
 
-# utils
+# consts
+DB_PATH = 'db.sqlite'
+
+# util methods
 def read_values(d_type):
   values = []
   with open(f'./resource/{d_type}.csv', 'r') as f:
@@ -30,13 +33,19 @@ def get_queries():
     q['CREATE']['VERSION'] = f.read()
   with open('sql/insert/word.sql', 'r') as f:
     q['INSERT']['WORD'] = f.read()
+  with open('sql/select/unanswered.sql', 'r') as f:
+    q['SELECT']['UNANSWERED'] = f.read()
+  with open('sql/select/incorrect.sql', 'r') as f:
+    q['SELECT']['INCORRECT'] = f.read()
   return q
 
-def get_connection_exclusive():
-  db_path = 'db.sqlite'
-  return sqlite3.connect(db_path, isolation_level='EXCLUSIVE')
+def get_connection():
+  return sqlite3.connect(DB_PATH)
 
-# execute query
+def get_connection_exclusive():
+  return sqlite3.connect(DB_PATH, isolation_level='EXCLUSIVE')
+
+# execute query methods
 def init_db():
   conn_exclusive = get_connection_exclusive()
   cur = conn_exclusive.cursor()
@@ -57,5 +66,15 @@ def init_db():
   finally:
     conn_exclusive.close()
 
+def select_unanswered(version_id, type_):
+  connection = get_connection()
+  cur = connection.cursor()
+  q = get_queries()
+  response = cur.execute(q['SELECT']['UNANSWERED'], (version_id, type_)).fetchall()
+  connection.close()
+  return response
+
 if __name__ == "__main__":
-  init_db()
+  # init_db()
+  resp = select_unanswered('6027924c-419f-40ae-8b83-454dfa6cd21a', 'ngsl')
+  print(resp)
