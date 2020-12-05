@@ -41,6 +41,8 @@ def get_queries():
     q['SELECT']['UNANSWERED'] = f.read()
   with open('sql/select/incorrect.sql', 'r') as f:
     q['SELECT']['INCORRECT'] = f.read()
+  with open('sql/select/parent_category.sql', 'r') as f:
+    q['SELECT']['PARENT_CATEGORY'] = f.read()
   return q
 
 def get_connection():
@@ -100,7 +102,8 @@ def insert_child_version(parent_id, name):
   q = get_queries()
   v_id = str(uuid.uuid4())
   try:
-    cur.execute(q['INSERT']['VERSION'], (v_id, name))
+    parent_category = cur.execute(q['SELECT']['PARENT_CATEGORY'], (parent_id,)).fetchone()[0]
+    cur.execute(q['INSERT']['VERSION'], (v_id, parent_id, name, parent_category))
     connection.commit()
   except Exception as e:
     print(e)
@@ -121,6 +124,6 @@ if __name__ == "__main__":
   # init_db()
   # resp = select_incorrect('6027924c-419f-40ae-8b83-454dfa6cd21a', 'ngsl')
   # print(resp)
-  insert_new_version('v1', 'ngsl')
-  # insert_child_version('1ea22bbb-76e7-44a2-90e0-67ed4ae195b1', 'v1_1')
+  # insert_new_version('v2', 'ngsl')
+  insert_child_version('bf53ec0b-b463-4969-b7cd-3e04766f7cdf', 'v1_2')
   # insert_test_result('6027924c-419f-40ae-8b83-454dfa6cd21a', 3, 0)
