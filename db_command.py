@@ -107,9 +107,13 @@ def insert_new_version(name, category):
   cur = connection.cursor()
   q = get_queries()
   v_id = str(uuid.uuid4())
-  cur.execute(q['INSERT']['VERSION'], (v_id, None, name, category))
-  connection.commit()
-  connection.close()
+  try:
+    cur.execute(q['INSERT']['VERSION'], (v_id, None, name, category))
+  except Exception as e:
+    print(e)
+    connection.rollback()
+  finally:
+    connection.close()
 
 def insert_child_version(parent_id, name):
   connection = get_connection()
@@ -130,9 +134,14 @@ def insert_test_result(version_id, word_id, collect):
   connection = get_connection()
   cur = connection.cursor()
   q = get_queries()
-  cur.execute(q['INSERT']['TEST'], (version_id, word_id, collect))
-  connection.commit()
-  connection.close()
+  try:
+    cur.execute(q['INSERT']['TEST'], (version_id, word_id, collect))
+    connection.commit()
+  except Exception as e:
+    print(e)
+    connection.rollback()
+  finally:
+    connection.close()
 
 
 if __name__ == "__main__":

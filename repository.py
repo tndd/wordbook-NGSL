@@ -3,7 +3,8 @@ from dataclasses import dataclass
 from db_command import (
   select_incorrect,
   select_unanswered,
-  select_parent_version
+  select_parent_version,
+  insert_test_result
 )
 
 # datamodels
@@ -53,11 +54,18 @@ class WordRepository:
       # origin
       word_rows = select_unanswered(self.version_id)
     return self.rows_to_models(word_rows)
+  
+  def regist_test_result(self, word, is_collect):
+    if is_collect:
+      insert_test_result(self.version_id, word.id, 1)
+    else:
+      insert_test_result(self.version_id, word.id, 0)
 
 
 if __name__ == "__main__":
   wr = WordRepository('6027924c-419f-40ae-8b83-454dfa6cd21a')
   # words = wr.get_unanswered_words()
   # print(words[0])
-  # print(wr.get_words()[0])
-  print(len(wr.get_words()))
+  word = wr.get_words()[0]
+  # print(len(wr.get_words()))
+  wr.regist_test_result(word, True)
