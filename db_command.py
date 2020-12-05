@@ -41,8 +41,8 @@ def get_queries():
     q['SELECT']['UNANSWERED'] = f.read()
   with open('sql/select/incorrect.sql', 'r') as f:
     q['SELECT']['INCORRECT'] = f.read()
-  with open('sql/select/parent_category.sql', 'r') as f:
-    q['SELECT']['PARENT_CATEGORY'] = f.read()
+  with open('sql/select/version_category.sql', 'r') as f:
+    q['SELECT']['VERSION_CATEGORY'] = f.read()
   return q
 
 def get_connection():
@@ -75,7 +75,7 @@ def select_unanswered(version_id):
   connection = get_connection()
   cur = connection.cursor()
   q = get_queries()
-  category = cur.execute(q['SELECT']['PARENT_CATEGORY'], (version_id,)).fetchone()[0]
+  category = cur.execute(q['SELECT']['VERSION_CATEGORY'], (version_id,)).fetchone()[0]
   response = cur.execute(q['SELECT']['UNANSWERED'], (version_id, category)).fetchall()
   connection.close()
   return response
@@ -84,7 +84,7 @@ def select_incorrect(version_id):
   connection = get_connection()
   cur = connection.cursor()
   q = get_queries()
-  category = cur.execute(q['SELECT']['PARENT_CATEGORY'], (version_id,)).fetchone()[0]
+  category = cur.execute(q['SELECT']['VERSION_CATEGORY'], (version_id,)).fetchone()[0]
   response = cur.execute(q['SELECT']['INCORRECT'], (version_id, category)).fetchall()
   connection.close()
   return response
@@ -104,8 +104,8 @@ def insert_child_version(parent_id, name):
   q = get_queries()
   v_id = str(uuid.uuid4())
   try:
-    parent_category = cur.execute(q['SELECT']['PARENT_CATEGORY'], (parent_id,)).fetchone()[0]
-    cur.execute(q['INSERT']['VERSION'], (v_id, parent_id, name, parent_category))
+    category = cur.execute(q['SELECT']['VERSION_CATEGORY'], (parent_id,)).fetchone()[0]
+    cur.execute(q['INSERT']['VERSION'], (v_id, parent_id, name, category))
     connection.commit()
   except Exception as e:
     print(e)
