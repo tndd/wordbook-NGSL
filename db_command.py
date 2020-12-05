@@ -29,16 +29,12 @@ def get_queries():
     q['CREATE']['WORD'] = f.read()
   with open('sql/create/test.sql') as f:
     q['CREATE']['TEST'] = f.read()
-  with open('sql/create/version_relation.sql') as f:
-    q['CREATE']['VERSION_RELATION'] = f.read()
   with open('sql/create/version.sql', 'r') as f:
     q['CREATE']['VERSION'] = f.read()
   with open('sql/insert/word.sql', 'r') as f:
     q['INSERT']['WORD'] = f.read()
   with open('sql/insert/version.sql', 'r') as f:
     q['INSERT']['VERSION'] = f.read()
-  with open('sql/insert/version_relation.sql', 'r') as f:
-    q['INSERT']['VERSION_RELATION'] = f.read()
   with open('sql/insert/test.sql', 'r') as f:
     q['INSERT']['TEST'] = f.read()
   with open('sql/select/unanswered.sql', 'r') as f:
@@ -62,7 +58,6 @@ def init_db():
     cur.execute(q['CREATE']['WORD'])
     cur.execute(q['CREATE']['TEST'])
     cur.execute(q['CREATE']['VERSION'])
-    cur.execute(q['CREATE']['VERSION_RELATION'])
     cur.executemany(q['INSERT']['WORD'], read_values('ngsl'))
     cur.executemany(q['INSERT']['WORD'], read_values('nawl'))
     cur.executemany(q['INSERT']['WORD'], read_values('tsl'))
@@ -106,7 +101,6 @@ def insert_child_version(parent_id, name):
   v_id = str(uuid.uuid4())
   try:
     cur.execute(q['INSERT']['VERSION'], (v_id, name))
-    cur.execute(q['INSERT']['VERSION_RELATION'], (v_id, parent_id))
     connection.commit()
   except Exception as e:
     print(e)
