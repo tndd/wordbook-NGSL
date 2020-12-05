@@ -85,12 +85,12 @@ def select_incorrect(version_id, category):
   connection.close()
   return response
 
-def insert_new_version(name):
+def insert_new_version(name, category):
   connection = get_connection()
   cur = connection.cursor()
   q = get_queries()
   v_id = str(uuid.uuid4())
-  cur.execute(q['INSERT']['VERSION'], (v_id, name))
+  cur.execute(q['INSERT']['VERSION'], (v_id, None, name, category))
   connection.commit()
   cur.close()
 
@@ -118,9 +118,9 @@ def insert_test_result(version_id, word_id, collect):
 
 
 if __name__ == "__main__":
-  init_db()
+  # init_db()
   # resp = select_incorrect('6027924c-419f-40ae-8b83-454dfa6cd21a', 'ngsl')
   # print(resp)
-  # insert_new_version('v1')
+  insert_new_version('v1', 'ngsl')
   # insert_child_version('1ea22bbb-76e7-44a2-90e0-67ed4ae195b1', 'v1_1')
   # insert_test_result('6027924c-419f-40ae-8b83-454dfa6cd21a', 3, 0)

@@ -1,2 +1,2 @@
-INSERT INTO version (id, name) 
-VALUES(?, ?);
+INSERT INTO version (id, parent_id, name, category)
+VALUES(?, ?, ?, ?);
