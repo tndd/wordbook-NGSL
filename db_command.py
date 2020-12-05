@@ -71,18 +71,20 @@ def init_db():
   finally:
     connection.close()
 
-def select_unanswered(version_id, category):
+def select_unanswered(version_id):
   connection = get_connection()
   cur = connection.cursor()
   q = get_queries()
+  category = cur.execute(q['SELECT']['PARENT_CATEGORY'], (version_id,)).fetchone()[0]
   response = cur.execute(q['SELECT']['UNANSWERED'], (version_id, category)).fetchall()
   connection.close()
   return response
 
-def select_incorrect(version_id, category):
+def select_incorrect(version_id):
   connection = get_connection()
   cur = connection.cursor()
   q = get_queries()
+  category = cur.execute(q['SELECT']['PARENT_CATEGORY'], (version_id,)).fetchone()[0]
   response = cur.execute(q['SELECT']['INCORRECT'], (version_id, category)).fetchall()
   connection.close()
   return response
@@ -122,8 +124,8 @@ def insert_test_result(version_id, word_id, collect):
 
 if __name__ == "__main__":
   # init_db()
-  # resp = select_incorrect('6027924c-419f-40ae-8b83-454dfa6cd21a', 'ngsl')
-  # print(resp)
+  resp = select_incorrect('6027924c-419f-40ae-8b83-454dfa6cd21a')
+  print(resp)
   # insert_new_version('v2', 'ngsl')
-  insert_child_version('bf53ec0b-b463-4969-b7cd-3e04766f7cdf', 'v1_2')
+  # insert_child_version('bf53ec0b-b463-4969-b7cd-3e04766f7cdf', 'v1_2')
   # insert_test_result('6027924c-419f-40ae-8b83-454dfa6cd21a', 3, 0)
