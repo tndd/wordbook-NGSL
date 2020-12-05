@@ -18,7 +18,6 @@ class Word:
 @dataclass
 class WordRepository:
   version_id: str
-  category: str
 
   @staticmethod
   def row_to_model(row):
@@ -41,16 +40,15 @@ class WordRepository:
     return models
 
   def get_unanswered_words(self):
-    word_rows = select_unanswered(self.version_id, self.category)
+    word_rows = select_unanswered(self.version_id)
     return self.rows_to_models(word_rows)
 
   def get_incorrect_words(self):
-    print(self.version_id, self.category)
-    word_rows = select_incorrect(self.version_id, self.category)
+    word_rows = select_incorrect(self.version_id)
     return self.rows_to_models(word_rows)
 
 
 if __name__ == "__main__":
-  wr = WordRepository('6027924c-419f-40ae-8b83-454dfa6cd21a', 'ngsl')
+  wr = WordRepository('6027924c-419f-40ae-8b83-454dfa6cd21a')
   words = wr.get_unanswered_words()
-  print(words[1])
+  print(words[0])
