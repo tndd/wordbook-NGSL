@@ -1,6 +1,6 @@
 CREATE TABLE word(
   id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  type TEXT NOT NULL,
+  category TEXT NOT NULL,
   word TEXT NOT NULL,
   translation TEXT NOT NULL,
   explanation TEXT NOT NULL,

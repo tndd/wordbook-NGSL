@@ -53,4 +53,4 @@ class WordRepository:
 if __name__ == "__main__":
   wr = WordRepository('6027924c-419f-40ae-8b83-454dfa6cd21a', 'ngsl')
   words = wr.get_unanswered_words()
-  print(words)
+  print(words[1])

@@ -7,15 +7,15 @@ import os
 DB_PATH = 'db.sqlite'
 
 # util methods
-def read_values(d_type):
+def read_values(category):
   values = []
-  with open(f'./resource/{d_type}.csv', 'r') as f:
+  with open(f'./resource/{category}.csv', 'r') as f:
     render = csv.reader(f)
     for row in list(render)[1:]:
-      if d_type == 'bsl':
-        values.append((d_type, row[0], row[1], row[3], row[4], row[5], row[2], ''))
+      if category == 'bsl':
+        values.append((category, row[0], row[1], row[3], row[4], row[5], row[2], ''))
       else:
-        values.append((d_type, row[0], row[1], row[4], row[5], row[6], row[2], row[3]))
+        values.append((category, row[0], row[1], row[4], row[5], row[6], row[2], row[3]))
   return values
 
 def get_queries():
@@ -74,19 +74,19 @@ def init_db():
   finally:
     connection.close()
 
-def select_unanswered(version_id, type_):
+def select_unanswered(version_id, category):
   connection = get_connection()
   cur = connection.cursor()
   q = get_queries()
-  response = cur.execute(q['SELECT']['UNANSWERED'], (version_id, type_)).fetchall()
+  response = cur.execute(q['SELECT']['UNANSWERED'], (version_id, category)).fetchall()
   connection.close()
   return response
 
-def select_incorrect(version_id, type_):
+def select_incorrect(version_id, category):
   connection = get_connection()
   cur = connection.cursor()
   q = get_queries()
-  response = cur.execute(q['SELECT']['INCORRECT'], (version_id, type_)).fetchall()
+  response = cur.execute(q['SELECT']['INCORRECT'], (version_id, category)).fetchall()
   connection.close()
   return response
 
@@ -124,9 +124,9 @@ def insert_test_result(version_id, word_id, collect):
 
 
 if __name__ == "__main__":
-  # init_db()
-  resp = select_incorrect('6027924c-419f-40ae-8b83-454dfa6cd21a', 'ngsl')
-  print(resp)
+  init_db()
+  # resp = select_incorrect('6027924c-419f-40ae-8b83-454dfa6cd21a', 'ngsl')
+  # print(resp)
   # insert_new_version('v1')
   # insert_child_version('1ea22bbb-76e7-44a2-90e0-67ed4ae195b1', 'v1_1')
   # insert_test_result('6027924c-419f-40ae-8b83-454dfa6cd21a', 3, 0)
