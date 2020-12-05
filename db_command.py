@@ -109,7 +109,7 @@ def insert_new_version(name, category):
   v_id = str(uuid.uuid4())
   cur.execute(q['INSERT']['VERSION'], (v_id, None, name, category))
   connection.commit()
-  cur.close()
+  connection.close()
 
 def insert_child_version(parent_id, name):
   connection = get_connection()
