@@ -109,6 +109,7 @@ def insert_new_version(name, category):
   v_id = str(uuid.uuid4())
   try:
     cur.execute(q['INSERT']['VERSION'], (v_id, None, name, category))
+    connection.commit()
   except Exception as e:
     print(e)
     connection.rollback()

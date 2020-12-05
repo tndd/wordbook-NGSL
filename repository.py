@@ -1,10 +1,12 @@
 from dataclasses import dataclass
+import uuid
 
 from db_command import (
   select_incorrect,
   select_unanswered,
   select_parent_version,
-  insert_test_result
+  insert_test_result,
+  insert_new_version
 )
 
 # datamodels
@@ -44,6 +46,12 @@ class WordRepository:
       models.append(cls.row_to_model(r))
     return models
   
+  @classmethod
+  def create_new_version(cls, name, category):
+    version_id = uuid.uuid4()
+    insert_new_version(name, category)
+    return cls(version_id)
+  
   def get_words(self):
     parent_version_id = select_parent_version(self.version_id)
     word_rows = []
@@ -63,9 +71,11 @@ class WordRepository:
 
 
 if __name__ == "__main__":
-  wr = WordRepository('6027924c-419f-40ae-8b83-454dfa6cd21a')
+  # wr = WordRepository('6027924c-419f-40ae-8b83-454dfa6cd21a')
   # words = wr.get_unanswered_words()
   # print(words[0])
-  word = wr.get_words()[0]
+  # word = wr.get_words()[0]
   # print(len(wr.get_words()))
-  wr.regist_test_result(word, True)
+  # wr.regist_test_result(word, True)
+  wr = WordRepository.create_new_version('afr', 'ngsl')
+  print(wr.version_id)
