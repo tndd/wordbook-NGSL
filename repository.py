@@ -5,6 +5,7 @@ from db_command import (
   select_incorrect,
   select_unanswered,
   select_parent_version,
+  select_versions,
   insert_test_result,
   insert_new_version
 )
@@ -20,6 +21,13 @@ class Word:
   example_translation: str
   pronunciation: str
   meaning_in_english: str
+
+@dataclass
+class Version:
+  id: str
+  parent_id: str
+  name: str
+  category: str
 
 # repository
 @dataclass
@@ -69,6 +77,28 @@ class WordRepository:
     else:
       insert_test_result(self.version_id, word.id, 0)
 
+@dataclass
+class VersionReository:
+  @staticmethod
+  def row_to_model(row):
+    return Version(
+      id=row[0],
+      parent_id=row[1],
+      name=row[2],
+      category=row[3]
+    )
+
+  @classmethod
+  def rows_to_models(cls, rows):
+    models = []
+    for r in rows:
+      models.append(cls.row_to_model(r))
+    return models
+
+  @classmethod
+  def get_versions(cls):
+    version_rows = select_versions()
+    return cls.rows_to_models(version_rows)
 
 if __name__ == "__main__":
   # wr = WordRepository('6027924c-419f-40ae-8b83-454dfa6cd21a')
@@ -77,5 +107,7 @@ if __name__ == "__main__":
   # word = wr.get_words()[0]
   # print(len(wr.get_words()))
   # wr.regist_test_result(word, True)
-  wr = WordRepository.create_new_version('afr', 'ngsl')
-  print(wr.version_id)
+  # wr = WordRepository.create_new_version('afr', 'ngsl')
+  # print(wr.version_id)
+  vr = VersionReository()
+  print(vr.get_versions())
