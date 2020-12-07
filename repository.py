@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
+from typing import List
 import uuid
 
 from db_command import (
@@ -43,7 +44,7 @@ class WordRepository:
   version_id: str
 
   @staticmethod
-  def row_to_model(row):
+  def row_to_model(row) -> Word:
     return Word(
       id=row[0],
       word=row[1],
@@ -56,19 +57,19 @@ class WordRepository:
     )
 
   @classmethod
-  def rows_to_models(cls, rows):
+  def rows_to_models(cls, rows) -> List[Word]:
     models = []
     for r in rows:
       models.append(cls.row_to_model(r))
     return models
   
   @classmethod
-  def create_new_version(cls, name, category):
+  def create_new_version(cls, name, category) -> 'WordRepository':
     version_id = uuid.uuid4()
     insert_new_version(name, category)
     return cls(version_id)
   
-  def get_words(self):
+  def get_words(self) -> List[Word]:
     parent_version_id = select_parent_version(self.version_id)
     word_rows = []
     if parent_version_id:
@@ -79,7 +80,7 @@ class WordRepository:
       word_rows = select_unanswered(self.version_id)
     return self.rows_to_models(word_rows)
   
-  def regist_test_result(self, word, is_collect):
+  def regist_test_result(self, word, is_collect) -> None:
     if is_collect:
       insert_test_result(self.version_id, word.id, 1)
     else:
@@ -88,7 +89,7 @@ class WordRepository:
 @dataclass
 class VersionReository:
   @staticmethod
-  def row_to_model(row):
+  def row_to_model(row) -> Version:
     return Version(
       id=row[0],
       parent_id=row[1],
@@ -97,14 +98,14 @@ class VersionReository:
     )
 
   @classmethod
-  def rows_to_models(cls, rows):
+  def rows_to_models(cls, rows) -> List[Version]:
     models = []
     for r in rows:
       models.append(cls.row_to_model(r))
     return models
 
   @classmethod
-  def get_versions(cls):
+  def get_versions(cls) -> List[Version]:
     version_rows = select_versions()
     return cls.rows_to_models(version_rows)
 
