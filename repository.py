@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from enum import Enum
 import uuid
 
 from db_command import (
@@ -9,6 +10,13 @@ from db_command import (
   insert_test_result,
   insert_new_version
 )
+
+# enums
+class TestCategory(Enum):
+  NGLS = 'ngsl'
+  NAEL = 'nawl'
+  TSL = 'tsl'
+  BSL = 'bsl'
 
 # datamodels
 @dataclass
