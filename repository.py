@@ -36,7 +36,7 @@ class Version:
   id: str
   parent_id: str
   name: str
-  category: str
+  category: TestCategory
 
 # repository
 @dataclass
@@ -44,7 +44,7 @@ class WordRepository:
   version_id: str
 
   @staticmethod
-  def row_to_model(row) -> Word:
+  def row_to_model(row: list) -> Word:
     return Word(
       id=row[0],
       word=row[1],
@@ -57,16 +57,16 @@ class WordRepository:
     )
 
   @classmethod
-  def rows_to_models(cls, rows) -> List[Word]:
+  def rows_to_models(cls, rows: List[list]) -> List[Word]:
     models = []
     for r in rows:
       models.append(cls.row_to_model(r))
     return models
   
   @classmethod
-  def create_new_version(cls, name, category) -> 'WordRepository':
+  def create_new_version(cls, name: str, category: TestCategory) -> 'WordRepository':
     version_id = uuid.uuid4()
-    insert_new_version(name, category)
+    insert_new_version(name, category.value)
     return cls(version_id)
   
   def get_words(self) -> List[Word]:
@@ -80,7 +80,7 @@ class WordRepository:
       word_rows = select_unanswered(self.version_id)
     return self.rows_to_models(word_rows)
   
-  def regist_test_result(self, word, is_collect) -> None:
+  def regist_test_result(self, word: Word, is_collect: bool) -> None:
     if is_collect:
       insert_test_result(self.version_id, word.id, 1)
     else:
@@ -89,16 +89,16 @@ class WordRepository:
 @dataclass
 class VersionReository:
   @staticmethod
-  def row_to_model(row) -> Version:
+  def row_to_model(row: list) -> Version:
     return Version(
       id=row[0],
       parent_id=row[1],
       name=row[2],
-      category=row[3]
+      category=TestCategory(row[3])
     )
 
   @classmethod
-  def rows_to_models(cls, rows) -> List[Version]:
+  def rows_to_models(cls, rows: List[list]) -> List[Version]:
     models = []
     for r in rows:
       models.append(cls.row_to_model(r))
