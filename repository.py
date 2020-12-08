@@ -124,7 +124,7 @@ if __name__ == "__main__":
   # word = wr.get_words()[0]
   # print(len(wr.get_words()))
   # wr.regist_test_result(word, True)
-  # wr = WordRepository.create_new_version('afr', 'ngsl')
+  # wr = WordRepository.create_new_version('v0', TestCategory.NGLS)
   # print(wr.version_id)
   vr = VersionReository()
   print(vr.get_versions())
