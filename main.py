@@ -26,8 +26,8 @@ def main(screen):
   curses.start_color()
   lists = ['aaa', 'bbb', 'ccc', 'ddd']
   a = _versions_menu(screen, lists)
-  # screen.clear()
-  print(a)
+  screen.clear()
+  screen.addstr(0, 0, a)
   screen.refresh()
   screen.getkey()
 
