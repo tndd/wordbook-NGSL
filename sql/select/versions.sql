@@ -1,1 +1,1 @@
-SELECT id, parent_id, name, category FROM version;
+SELECT id, parent_id, name, category, timestamp FROM version;

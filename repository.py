@@ -38,6 +38,7 @@ class Version:
   name: str
   category: TestCategory
   remains: int
+  timestamp: str
 
   def is_complete(self):
     return self.remains == 0
@@ -100,6 +101,7 @@ class VersionReository:
       parent_id=row[1],
       name=row[2],
       category=TestCategory(row[3]),
+      timestamp=row[4],
       remains=len(select_unanswered(v_id))
     )
 
