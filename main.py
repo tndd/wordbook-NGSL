@@ -12,7 +12,7 @@ def _versions_menu(screen, versions):
   screen.keypad(True)
   while True:
     screen.clear()
-    screen.addstr(0, 0, f"idx\tname\tid", curses.A_DIM)
+    screen.addstr(0, 0, f"idx\tname\tid", curses.A_ITALIC)
     for i, version in enumerate(versions):
       screen.addstr(i + 1, 0, f"{i}\t{version.name}\t{version.id}", cp[i == y_pos])
     key = screen.getch()
