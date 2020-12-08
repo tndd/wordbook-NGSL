@@ -22,11 +22,26 @@ def _versions_menu(screen, versions):
       y_pos = (y_pos + 1) % len(versions)
     elif key == ord('k'):
       y_pos = (y_pos - 1) % len(versions)
-    screen.refresh()
 
 def _test_loop(screen, word_repository):
-  pass
-
+  words = word_repository.get_words()
+  for word in words:
+    screen.clear()
+    screen.addstr(0, 0, "[<-]: I didn't know, [->]: I knew", curses.A_DIM)
+    screen.addstr(1, 0, word.word, curses.A_BOLD)
+    screen.getch()
+    screen.addstr(3, 0, word.translation)
+    while True:
+      key = screen.getch()
+      if key == curses.KEY_LEFT:
+        word_repository.regist_test_result(word, False)
+        break
+      elif key == curses.KEY_RIGHT:
+        word_repository.regist_test_result(word, True)
+        break
+      else:
+        continue
+  screen.clear()
 
 def main(screen):
   curses.start_color()
@@ -35,9 +50,7 @@ def main(screen):
   version = _versions_menu(screen, versions)
   wr = WordRepository(version.id)
   _test_loop(screen, wr)
-  screen.clear()
-  screen.addstr(0, 0, version.name)
-  screen.refresh()
+  screen.addstr(0, 0, 'Complete Test!')
   screen.getkey()
 
 if __name__ == '__main__':
