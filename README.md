@@ -1,4 +1,4 @@
-# wordbook-gnsl
+# wordbook-NGSL
 
 ngsl,nawl,tsl,bslの単語帳。
 
