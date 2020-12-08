@@ -37,6 +37,10 @@ class Version:
   parent_id: str
   name: str
   category: TestCategory
+  remains: int
+
+  def is_complete(self):
+    return self.remains == 0
 
 # repository
 @dataclass
@@ -90,11 +94,13 @@ class WordRepository:
 class VersionReository:
   @staticmethod
   def row_to_model(row: list) -> Version:
+    v_id = row[0]
     return Version(
-      id=row[0],
+      id=v_id,
       parent_id=row[1],
       name=row[2],
-      category=TestCategory(row[3])
+      category=TestCategory(row[3]),
+      remains=len(select_unanswered(v_id))
     )
 
   @classmethod
