@@ -12,9 +12,9 @@ def _versions_menu(screen, versions):
   screen.keypad(True)
   while True:
     screen.clear()
-    screen.addstr(0, 0, f"idx\tname\tcomplete\tid", curses.A_ITALIC)
+    screen.addstr(0, 0, f"idx\tname\tremains\tid", curses.A_ITALIC)
     for i, version in enumerate(versions):
-      screen.addstr(i + 1, 0, f"{i}\t{version.name}\t{version.is_complete()}\t{version.id}", cp[i == y_pos])
+      screen.addstr(i + 1, 0, f"{i}\t{version.name}\t{version.remains}\t{version.id}", cp[i == y_pos])
     key = screen.getch()
     if key == ord('\n'):
       return versions[y_pos]
