@@ -9,7 +9,7 @@ def _versions_menu(screen, versions):
     True: curses.A_STANDOUT,
     False: curses.A_NORMAL
   }
-  screen.keypad(1)
+  screen.keypad(True)
   while True:
     screen.clear()
     screen.addstr(0, 0, f"idx\tname\tid", curses.A_DIM)
