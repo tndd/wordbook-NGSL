@@ -12,9 +12,11 @@ def _versions_menu(screen, versions):
   screen.keypad(True)
   while True:
     screen.clear()
+    height, width = screen.getmaxyx()
     screen.addstr(0, 0, f"idx\tname\tremains\tid", curses.A_ITALIC)
     for i, version in enumerate(versions):
       screen.addstr(i + 1, 0, f"{i}\t{version.name}\t{version.remains}\t{version.id}", cp[i == y_pos])
+    screen.addstr(height-2, 0, "[j]: down, [j]: up, [enter]: select")
     key = screen.getch()
     if key == ord('\n'):
       return versions[y_pos]
