@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import List
+from typing import List, Optional
 
 from db_command import (
   select_incorrect,
@@ -33,7 +33,7 @@ class Word:
 @dataclass
 class Version:
   id: str
-  parent_id: str
+  parent_id: Optional[str]
   name: str
   category: TestCategory
   remains: int
@@ -41,6 +41,9 @@ class Version:
 
   def is_complete(self):
     return self.remains == 0
+  
+  def is_child(self):
+    return self.parent_id == None
 
 # repository
 @dataclass
@@ -135,8 +138,11 @@ if __name__ == "__main__":
   # wr = WordRepository.create_new_version('v0', TestCategory.NGLS)
   # print(wr.version_id)
   vr = VersionReository()
-  v = vr.create_version('test_test', TestCategory.NAWL)
+  v = vr.get_by_id('9ae7a909-1257-40df-bb31-eb389c1bd96c')
   print(v)
+  print(v.is_child())
+  # v = vr.create_version('test_test', TestCategory.NAWL)
+  # print(v)
   # vs = vr.get_versions()
   # print(vs)
   # print(vr.get_by_id('b23ad014-84b9-45fa-94be-0dc4035a6d60'))
