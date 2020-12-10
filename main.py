@@ -50,7 +50,7 @@ def main(screen):
   vr = VersionReository()
   versions = vr.get_versions()
   version = _versions_menu(screen, versions)
-  wr = WordRepository(version.id)
+  wr = WordRepository(version)
   _test_loop(screen, wr)
   screen.addstr(0, 0, 'Complete Test!')
   screen.getkey()

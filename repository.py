@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import List, Optional
-import uuid
+from typing import List
 
 from db_command import (
   select_incorrect,
@@ -46,7 +45,7 @@ class Version:
 # repository
 @dataclass
 class WordRepository:
-  version_id: str
+  version: Version
 
   @staticmethod
   def row_to_model(row: list) -> Word:
@@ -74,21 +73,21 @@ class WordRepository:
     return cls(version_id)
   
   def get_words(self) -> List[Word]:
-    parent_version_id = select_parent_version(self.version_id)
+    parent_version_id = select_parent_version(self.version.id)
     word_rows = []
     if parent_version_id:
       # child
       word_rows = select_incorrect(parent_version_id)
     else:
       # origin
-      word_rows = select_unanswered(self.version_id)
+      word_rows = select_unanswered(self.version.id)
     return self.rows_to_models(word_rows)
   
   def regist_test_result(self, word: Word, is_collect: bool) -> None:
     if is_collect:
-      insert_test_result(self.version_id, word.id, 1)
+      insert_test_result(self.version.id, word.id, 1)
     else:
-      insert_test_result(self.version_id, word.id, 0)
+      insert_test_result(self.version.id, word.id, 0)
 
 @dataclass
 class VersionReository:
