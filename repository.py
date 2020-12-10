@@ -15,7 +15,7 @@ from db_command import (
 # enums
 class TestCategory(Enum):
   NGLS = 'ngsl'
-  NAEL = 'nawl'
+  NAWL = 'nawl'
   TSL = 'tsl'
   BSL = 'bsl'
 
@@ -70,8 +70,7 @@ class WordRepository:
   
   @classmethod
   def create_new_version(cls, name: str, category: TestCategory) -> 'WordRepository':
-    version_id = uuid.uuid4()
-    insert_new_version(name, category.value)
+    version_id = insert_new_version(name, category.value)
     return cls(version_id)
   
   def get_words(self) -> List[Word]:
@@ -106,17 +105,6 @@ class VersionReository:
     )
   
   @classmethod
-  def create_version(cls, name: str, category: TestCategory) -> Version:
-    version_id = uuid.uuid4()
-    insert_new_version(name, category.value)
-    return cls.get_by_id(version_id)
-  
-  @classmethod
-  def get_by_id(cls, version_id: str) -> Optional[Version]:
-    versions = cls.get_versions()
-    return next(filter(lambda v: v.id == version_id, versions), None)
-
-  @classmethod
   def rows_to_models(cls, rows: List[list]) -> List[Version]:
     models = []
     for r in rows:
@@ -128,6 +116,16 @@ class VersionReository:
     version_rows = select_versions()
     return cls.rows_to_models(version_rows)
 
+  @classmethod
+  def get_by_id(cls, version_id: str) -> Version:
+    versions = cls.get_versions()
+    return next(filter(lambda v: v.id == version_id, versions))
+
+  @classmethod
+  def create_version(cls, name: str, category: TestCategory) -> Version:
+    version_id = insert_new_version(name, category.value)
+    return cls.get_by_id(version_id)
+
 if __name__ == "__main__":
   # wr = WordRepository('6027924c-419f-40ae-8b83-454dfa6cd21a')
   # words = wr.get_unanswered_words()
@@ -138,6 +136,8 @@ if __name__ == "__main__":
   # wr = WordRepository.create_new_version('v0', TestCategory.NGLS)
   # print(wr.version_id)
   vr = VersionReository()
-  vs = vr.get_versions()
-  print(vs)
-  print(vr.get_by_id('9ae7a909-1257-40df-bb31-eb389c1bd96c_'))
+  v = vr.create_version('test_test', TestCategory.NAWL)
+  print(v)
+  # vs = vr.get_versions()
+  # print(vs)
+  # print(vr.get_by_id('b23ad014-84b9-45fa-94be-0dc4035a6d60'))
