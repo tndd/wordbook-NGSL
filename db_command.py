@@ -120,6 +120,7 @@ def insert_new_version(name, category):
   try:
     cur.execute(q['INSERT']['VERSION'], (v_id, None, name, category))
     connection.commit()
+    return v_id
   except Exception as e:
     print(e)
     connection.rollback()
