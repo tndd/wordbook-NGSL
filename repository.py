@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import List
+from typing import List, Optional
 import uuid
 
 from db_command import (
@@ -104,6 +104,17 @@ class VersionReository:
       timestamp=row[4],
       remains=len(select_unanswered(v_id))
     )
+  
+  @classmethod
+  def create_version(cls, name: str, category: TestCategory) -> Version:
+    version_id = uuid.uuid4()
+    insert_new_version(name, category.value)
+    return cls.get_by_id(version_id)
+  
+  @classmethod
+  def get_by_id(cls, version_id: str) -> Optional[Version]:
+    versions = cls.get_versions()
+    return next(filter(lambda v: v.id == version_id, versions), None)
 
   @classmethod
   def rows_to_models(cls, rows: List[list]) -> List[Version]:
@@ -127,4 +138,6 @@ if __name__ == "__main__":
   # wr = WordRepository.create_new_version('v0', TestCategory.NGLS)
   # print(wr.version_id)
   vr = VersionReository()
-  print(vr.get_versions())
+  vs = vr.get_versions()
+  print(vs)
+  print(vr.get_by_id('9ae7a909-1257-40df-bb31-eb389c1bd96c_'))
