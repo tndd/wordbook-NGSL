@@ -8,7 +8,8 @@ from db_command import (
   select_parent_version,
   select_versions,
   insert_test_result,
-  insert_new_version
+  insert_new_version,
+  insert_child_version
 )
 
 # enums
@@ -127,7 +128,12 @@ class VersionReository:
   def create_version(cls, name: str, category: TestCategory) -> Version:
     version_id = insert_new_version(name, category.value)
     return cls.get_by_id(version_id)
-
+  
+  @classmethod
+  def create_child_version(cls, version: Version, name: str) -> Version:
+    version_id = insert_child_version(version.id, name)
+    return cls.get_by_id(version_id)
+  
 if __name__ == "__main__":
   # wr = WordRepository('6027924c-419f-40ae-8b83-454dfa6cd21a')
   # words = wr.get_unanswered_words()
@@ -139,8 +145,9 @@ if __name__ == "__main__":
   # print(wr.version_id)
   vr = VersionReository()
   v = vr.get_by_id('9ae7a909-1257-40df-bb31-eb389c1bd96c')
-  print(v)
-  print(v.is_child())
+  print(vr.create_child_version(v, 'tsttst'))
+  # print(v)
+  # print(v.is_child())
   # v = vr.create_version('test_test', TestCategory.NAWL)
   # print(v)
   # vs = vr.get_versions()
