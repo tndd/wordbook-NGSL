@@ -2,7 +2,8 @@ import curses
 
 from repository import VersionReository, WordRepository
 
-def _versions_menu(screen, versions):
+def _versions_menu(screen, version_repository):
+  versions = version_repository.get_versions()
   y_pos = 0
   key = None
   cp = {
@@ -48,8 +49,7 @@ def _test_loop(screen, word_repository):
 def main(screen):
   curses.start_color()
   vr = VersionReository()
-  versions = vr.get_versions()
-  version = _versions_menu(screen, versions)
+  version = _versions_menu(screen, vr)
   wr = WordRepository(version)
   _test_loop(screen, wr)
   screen.addstr(0, 0, 'Complete Test!')
