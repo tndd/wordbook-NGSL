@@ -136,6 +136,7 @@ def insert_child_version(parent_id, name):
     category = cur.execute(q['SELECT']['VERSION_CATEGORY'], (parent_id,)).fetchone()[0]
     cur.execute(q['INSERT']['VERSION'], (v_id, parent_id, name, category))
     connection.commit()
+    return v_id
   except Exception as e:
     print(e)
     connection.rollback()
@@ -159,9 +160,9 @@ def insert_test_result(version_id, word_id, collect):
 if __name__ == "__main__":
   # init_db()
   # print(select_incorrect('6027924c-419f-40ae-8b83-454dfa6cd21a_')[:10])
-  print(select_unanswered('6027924c-419f-40ae-8b83-454dfa6cd21')[:10])
+  # print(select_unanswered('6027924c-419f-40ae-8b83-454dfa6cd21')[:10])
   # insert_new_version('v3', 'ngsl')
-  # insert_child_version('bf53ec0b-b463-4969-b7cd-3e04766f7cdf', 'v1_2')
+  insert_child_version('9ae7a909-1257-40df-bb31-eb389c1bd96c', 'v1_2')
   # insert_test_result('6027924c-419f-40ae-8b83-454dfa6cd21a', 3, 0)
   # print(select_parent_version('8c12360b-7598-4579-81d1-07658e56c2cb_'))
   # print(select_versions())
