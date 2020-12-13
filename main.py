@@ -1,6 +1,6 @@
 import curses
 
-from repository import VersionReository, WordRepository
+from repository import VersionReository, WordRepository, TestCategory
 
 def _versions_menu(screen, version_repository):
   versions = version_repository.get_versions()
@@ -18,7 +18,7 @@ def _versions_menu(screen, version_repository):
     for i, version in enumerate(versions):
       screen.addstr(i + 1, 0, f"{i}\t{version.name}\t{version.remains}\t{version.id}", cp[i == y_pos])
     screen.addstr(height-2, 0, "[j]: down, [j]: up, [enter]: select")
-    # screen.addstr(height-1, 0, "[c]: create new test, [r]: review test")
+    screen.addstr(height-1, 0, "[c]: create new test, [r]: review test")
     key = screen.getch()
     if key == ord('\n'):
       return versions[y_pos]
@@ -26,13 +26,24 @@ def _versions_menu(screen, version_repository):
       y_pos = (y_pos + 1) % len(versions)
     elif key == ord('k'):
       y_pos = (y_pos - 1) % len(versions)
-    # elif key == ord('c'):
-    #   screen.clear()
-    #   screen.addstr(0, 0, "New test name...")
-    #   s = screen.getstr()
-    #   screen.addstr(1, 0, s)
-    #   key = screen.getch()
-      # created_v_id = version_repository.create_version()
+    elif key == ord('c'):
+      _create_new_version(screen, version_repository)
+      versions = version_repository.get_versions()
+
+def _create_new_version(screen, version_repository):
+  screen.clear()
+  screen.addstr(0, 0, "Create new test.")
+  screen.addstr(1, 0, "Input name: ")
+  curses.echo()
+  test_name = screen.getstr().decode(encoding="utf-8")
+  curses.noecho()
+  screen.clear()
+  created_version = version_repository.create_version(test_name, TestCategory.NGLS)
+  screen.addstr(0, 0, f"Created test!: {created_version.name}")
+  screen.addstr(1, 0, f"Version ID: {created_version.id}")
+  screen.getch()
+  return created_version
+
 
 def _test_loop(screen, word_repository):
   words = word_repository.get_words()
