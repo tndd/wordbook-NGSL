@@ -18,6 +18,7 @@ def _versions_menu(screen, version_repository):
     for i, version in enumerate(versions):
       screen.addstr(i + 1, 0, f"{i}\t{version.name}\t{version.remains}\t{version.id}", cp[i == y_pos])
     screen.addstr(height-2, 0, "[j]: down, [j]: up, [enter]: select")
+    # screen.addstr(height-1, 0, "[c]: create new test, [r]: review test")
     key = screen.getch()
     if key == ord('\n'):
       return versions[y_pos]
@@ -25,6 +26,13 @@ def _versions_menu(screen, version_repository):
       y_pos = (y_pos + 1) % len(versions)
     elif key == ord('k'):
       y_pos = (y_pos - 1) % len(versions)
+    # elif key == ord('c'):
+    #   screen.clear()
+    #   screen.addstr(0, 0, "New test name...")
+    #   s = screen.getstr()
+    #   screen.addstr(1, 0, s)
+    #   key = screen.getch()
+      # created_v_id = version_repository.create_version()
 
 def _test_loop(screen, word_repository):
   words = word_repository.get_words()
