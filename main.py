@@ -30,6 +30,23 @@ def _versions_menu(screen, version_repository):
     elif key == ord('c'):
       _create_new_version(screen, version_repository)
       versions = version_repository.get_versions()
+    elif key == ord('r'):
+      _create_child_version(screen, versions[y_pos], version_repository)
+      versions = version_repository.get_versions()
+
+def _create_child_version(screen, version, version_repository):
+  screen.clear()
+  screen.addstr(0, 0, f'Review: "{version.name}", Id: "{version.id}"')
+  screen.addstr(1, 0, "Input name: ")
+  curses.echo()
+  test_name = screen.getstr().decode(encoding="utf-8")
+  curses.noecho()
+  screen.clear()
+  created_version = version_repository.create_child_version(version, test_name)
+  screen.addstr(0, 0, f"Created Review test!: {created_version.name}")
+  screen.addstr(1, 0, f"Version ID: {created_version.id}")
+  screen.getch()
+  return created_version
 
 def _create_new_version(screen, version_repository):
   screen.clear()
