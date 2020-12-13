@@ -1,4 +1,5 @@
 import curses
+import random
 
 from repository import VersionReository, WordRepository
 
@@ -28,6 +29,7 @@ def _versions_menu(screen, version_repository):
 
 def _test_loop(screen, word_repository):
   words = word_repository.get_words()
+  random.shuffle(words)
   for word in words:
     screen.clear()
     screen.addstr(0, 0, "[<-]: I didn't know, [->]: I knew", curses.A_DIM)
