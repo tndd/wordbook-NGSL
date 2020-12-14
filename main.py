@@ -53,12 +53,31 @@ def _create_new_version(screen, version_repository):
   screen.addstr(0, 0, "Create new test.")
   screen.addstr(1, 0, "Input name: ")
   curses.echo()
-  test_name = screen.getstr().decode(encoding="utf-8")
+  # Test name
+  name = screen.getstr().decode(encoding="utf-8")
+  screen.addstr(2, 0, "Select test category. [1]ngsl, [2]nawl: [3]bsl, [4]tsl: ")
   curses.noecho()
+  # Select test category
+  while True:
+    key = screen.getch()
+    if key == ord('1'):
+      category = TestCategory.NGLS
+      break
+    elif key == ord('2'):
+      category = TestCategory.NAWL
+      break
+    elif key == ord('3'):
+      category = TestCategory.BSL
+      break
+    elif key == ord('4'):
+      category = TestCategory.TSL
+      break
   screen.clear()
-  created_version = version_repository.create_version(test_name, TestCategory.NGLS)
-  screen.addstr(0, 0, f"Created test!: {created_version.name}")
-  screen.addstr(1, 0, f"Version ID: {created_version.id}")
+  created_version = version_repository.create_version(name, category)
+  screen.addstr(0, 0, f"NEW TEST IS CREATED!")
+  screen.addstr(1, 0, f"Name\t{created_version.name}")
+  screen.addstr(2, 0, f"Version ID\t{created_version.id}")
+  screen.addstr(3, 0, f"Test category\t{created_version.category.name}")
   screen.getch()
   return created_version
 
