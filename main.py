@@ -1,4 +1,5 @@
 import curses
+import enum
 import random
 
 from repository import VersionReository, WordRepository, TestCategory
@@ -85,12 +86,13 @@ def _create_new_version(screen, version_repository):
 def _test_loop(screen, word_repository):
   words = word_repository.get_words()
   random.shuffle(words)
-  for word in words:
+  for i, word in enumerate(words):
     screen.clear()
     screen.addstr(0, 0, "[<-]: I didn't know, [->]: I knew", curses.A_DIM)
-    screen.addstr(1, 0, word.word, curses.A_BOLD)
+    screen.addstr(1, 0, f"Remains: {len(words) - i}", curses.A_DIM)
+    screen.addstr(3, 0, word.word, curses.A_BOLD)
     screen.getch()
-    screen.addstr(3, 0, word.translation)
+    screen.addstr(5, 0, word.translation)
     while True:
       key = screen.getch()
       if key == curses.KEY_LEFT:
