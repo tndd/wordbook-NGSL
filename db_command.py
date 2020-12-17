@@ -50,14 +50,18 @@ def get_queries():
 def get_connection():
   return sqlite3.connect(DB_PATH)
 
+def get_db_tools():
+  connection = get_connection()
+  cur = connection.cursor()
+  q = get_queries()
+  return connection, cur, q
+
 # execute query methods
 def init_db():
   if os.path.exists(DB_PATH):
     print('Reset DB')
     os.remove(DB_PATH)
-  connection = get_connection()
-  cur = connection.cursor()
-  q = get_queries()
+  connection, cur, q = get_db_tools()
   try:
     cur.execute(q['CREATE']['WORD'])
     cur.execute(q['CREATE']['TEST'])
@@ -74,9 +78,7 @@ def init_db():
     connection.close()
 
 def select_parent_version(version_id):
-  connection = get_connection()
-  cur = connection.cursor()
-  q = get_queries()
+  connection, cur, q = get_db_tools()
   response = cur.execute(q['SELECT']['PARENT_VERSION'], (version_id,)).fetchone()
   parent_version_id = None
   if response:
@@ -85,25 +87,19 @@ def select_parent_version(version_id):
   return parent_version_id
 
 def select_versions():
-  connection = get_connection()
-  cur = connection.cursor()
-  q = get_queries()
+  connection, cur, q = get_db_tools()
   response = cur.execute(q['SELECT']['VERSIONS']).fetchall()
   connection.close()
   return response
 
 def select_all(version_id, category):
-  connection = get_connection()
-  cur = connection.cursor()
-  q = get_queries()
+  connection, cur, q = get_db_tools()
   response = cur.execute(q['SELECT']['ALL'], (version_id, category)).fetchall()
   connection.close()
   return response
 
 def insert_new_version(name, category):
-  connection = get_connection()
-  cur = connection.cursor()
-  q = get_queries()
+  connection, cur, q = get_db_tools()
   v_id = str(uuid.uuid4())
   try:
     cur.execute(q['INSERT']['VERSION'], (v_id, None, name, category))
@@ -116,9 +112,7 @@ def insert_new_version(name, category):
     connection.close()
 
 def insert_child_version(parent_id, name):
-  connection = get_connection()
-  cur = connection.cursor()
-  q = get_queries()
+  connection, cur, q = get_db_tools()
   v_id = str(uuid.uuid4())
   try:
     category = cur.execute(q['SELECT']['VERSION_CATEGORY'], (parent_id,)).fetchone()[0]
@@ -132,9 +126,7 @@ def insert_child_version(parent_id, name):
     connection.close()
 
 def insert_test_result(version_id, word_id, collect):
-  connection = get_connection()
-  cur = connection.cursor()
-  q = get_queries()
+  connection, cur, q = get_db_tools()
   try:
     cur.execute(q['INSERT']['TEST'], (version_id, word_id, collect))
     connection.commit()
