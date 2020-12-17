@@ -36,6 +36,15 @@ class Word:
   meaning_in_english: str
   response_status: ResponseStatus
 
+  def is_correct(self):
+    return self.response_status == ResponseStatus.CORRECT
+
+  def is_wrong(self):
+    return self.response_status == ResponseStatus.WRONG
+
+  def is_unanswered(self):
+    return self.response_status == ResponseStatus.UNANSERED
+
 @dataclass
 class Version:
   id: str
@@ -91,6 +100,18 @@ class WordRepository:
       word_rows = select_all(self.version.parent_id, self.version.category.value)
     return self.rows_to_models(word_rows)
   
+  def get_words_correct(self) -> List[Word]:
+    words = self.get_words()
+    return list(filter(lambda w: w.is_correct(), words))
+
+  def get_words_wrong(self) -> List[Word]:
+    words = self.get_words()
+    return list(filter(lambda w: w.is_wrong(), words))
+
+  def get_words_unanswered(self) -> List[Word]:
+    words = self.get_words()
+    return list(filter(lambda w: w.is_unanswered(), words))
+  
   def regist_test_result(self, word: Word, is_collect: bool) -> None:
     if is_collect:
       insert_test_result(self.version.id, word.id, 1)
@@ -140,9 +161,12 @@ class VersionReository:
   
 if __name__ == "__main__":
   vr = VersionReository()
-  v = vr.get_by_id('9ae7a909-1257-40df-bb31-eb389c1bd96c')
+  v = vr.get_by_id('eebed305-04f0-4671-8dd6-598abac53029')
   wr = WordRepository(v)
-  print(wr.get_words()[0])
+  print(len(wr.get_words_correct()))
+  print(len(wr.get_words_wrong()))
+  print(len(wr.get_words_unanswered()))
+  # print(wr.get_words()[0])
   # words = wr.get_unanswered_words()
   # print(words[0])
   # word = wr.get_words()[0]
