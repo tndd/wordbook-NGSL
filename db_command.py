@@ -1,6 +1,5 @@
 import csv
 import sqlite3
-from sqlite3.dbapi2 import version
 import uuid
 import os
 
@@ -38,10 +37,6 @@ def get_queries():
     q['INSERT']['VERSION'] = f.read()
   with open('sql/insert/test.sql', 'r') as f:
     q['INSERT']['TEST'] = f.read()
-  with open('sql/select/unanswered.sql', 'r') as f:
-    q['SELECT']['UNANSWERED'] = f.read()
-  with open('sql/select/incorrect.sql', 'r') as f:
-    q['SELECT']['INCORRECT'] = f.read()
   with open('sql/select/version_category.sql', 'r') as f:
     q['SELECT']['VERSION_CATEGORY'] = f.read()
   with open('sql/select/parent_version_id.sql', 'r') as f:
@@ -77,24 +72,6 @@ def init_db():
     connection.rollback()
   finally:
     connection.close()
-
-def select_unanswered(version_id):
-  connection = get_connection()
-  cur = connection.cursor()
-  q = get_queries()
-  category = cur.execute(q['SELECT']['VERSION_CATEGORY'], (version_id,)).fetchone()[0]
-  response = cur.execute(q['SELECT']['UNANSWERED'], (version_id, category)).fetchall()
-  connection.close()
-  return response
-
-def select_incorrect(version_id):
-  connection = get_connection()
-  cur = connection.cursor()
-  q = get_queries()
-  category = cur.execute(q['SELECT']['VERSION_CATEGORY'], (version_id,)).fetchone()[0]
-  response = cur.execute(q['SELECT']['INCORRECT'], (version_id, category)).fetchall()
-  connection.close()
-  return response
 
 def select_parent_version(version_id):
   connection = get_connection()

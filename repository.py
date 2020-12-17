@@ -3,7 +3,6 @@ from enum import Enum
 from typing import List, Optional
 
 from db_command import (
-  select_unanswered,
   select_versions,
   select_all,
   insert_test_result,
