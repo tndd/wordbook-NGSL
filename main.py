@@ -1,5 +1,4 @@
 import curses
-import enum
 import random
 
 from repository import VersionReository, WordRepository, TestCategory
