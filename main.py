@@ -16,9 +16,9 @@ def _versions_menu(screen, version_repository):
   while True:
     screen.clear()
     height, width = screen.getmaxyx()
-    screen.addstr(0, 0, f"idx\tname\tremains\tid", curses.A_ITALIC)
+    screen.addstr(0, 0, f"idx\tname\tid", curses.A_ITALIC)
     for i, version in enumerate(versions):
-      screen.addstr(i + 1, 0, f"{i}\t{version.name}\t{version.remains}\t{version.id}", cp[i == y_pos])
+      screen.addstr(i + 1, 0, f"{i}\t{version.name}\t{version.id}", cp[i == y_pos])
     screen.addstr(height-2, 0, "[j]: down, [j]: up, [enter]: select")
     screen.addstr(height-1, 0, "[c]: create new test, [r]: review test")
     key = screen.getch()
@@ -84,7 +84,7 @@ def _create_new_version(screen, version_repository):
 
 
 def _test_loop(screen, word_repository):
-  words = word_repository.get_words()
+  words = word_repository.get_words_remains()
   random.shuffle(words)
   for i, word in enumerate(words):
     screen.clear()

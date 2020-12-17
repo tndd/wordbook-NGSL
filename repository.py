@@ -51,12 +51,8 @@ class Version:
   parent_id: Optional[str]
   name: str
   category: TestCategory
-  remains: int
   timestamp: str
 
-  def is_complete(self):
-    return self.remains == 0
-  
   def is_root(self):
     return self.parent_id == None
 
@@ -111,7 +107,11 @@ class WordRepository:
   def get_words_unanswered(self) -> List[Word]:
     words = self.get_words()
     return list(filter(lambda w: w.is_unanswered(), words))
-  
+
+  def get_words_remains(self) -> List[Word]:
+    words = self.get_words()
+    return list(filter(lambda w: w.is_wrong() | w.is_unanswered(), words))
+
   def regist_test_result(self, word: Word, is_collect: bool) -> None:
     if is_collect:
       insert_test_result(self.version.id, word.id, 1)
@@ -122,14 +122,12 @@ class WordRepository:
 class VersionReository:
   @staticmethod
   def row_to_model(row: list) -> Version:
-    v_id = row[0]
     return Version(
-      id=v_id,
+      id=row[0],
       parent_id=row[1],
       name=row[2],
       category=TestCategory(row[3]),
-      timestamp=row[4],
-      remains=len(select_unanswered(v_id))
+      timestamp=row[4]
     )
   
   @classmethod
