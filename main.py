@@ -19,7 +19,7 @@ def _versions_menu(screen, version_repository):
     for i, version in enumerate(versions):
       screen.addstr(i + 1, 0, f"{i}\t{version.name}\t{version.id}", cp[i == y_pos])
     screen.addstr(height-2, 0, "[j]: down, [j]: up, [enter]: select")
-    screen.addstr(height-1, 0, "[c]: create new test, [r]: review test")
+    screen.addstr(height-1, 0, "[c]: create new test,[i]: Inherit test, [r]: review test")
     key = screen.getch()
     if key == ord('\n'):
       return versions[y_pos]
@@ -30,20 +30,21 @@ def _versions_menu(screen, version_repository):
     elif key == ord('c'):
       _create_new_version(screen, version_repository)
       versions = version_repository.get_versions()
-    elif key == ord('r'):
+    elif key == ord('i'):
       _create_child_version(screen, versions[y_pos], version_repository)
       versions = version_repository.get_versions()
 
 def _create_child_version(screen, version, version_repository):
   screen.clear()
-  screen.addstr(0, 0, f'Review: "{version.name}", Id: "{version.id}"')
-  screen.addstr(1, 0, "Input name: ")
+  screen.addstr(0, 0, f'Source name:\t{version.name}', curses.A_DIM)
+  screen.addstr(1, 0, f'Id:\t\t{version.id}', curses.A_DIM)
+  screen.addstr(3, 0, "Input be inherited test name: ")
   curses.echo()
   test_name = screen.getstr().decode(encoding="utf-8")
   curses.noecho()
   screen.clear()
   created_version = version_repository.create_child_version(version, test_name)
-  screen.addstr(0, 0, f"Created Review test!: {created_version.name}")
+  screen.addstr(0, 0, f"Created hereditary test!: {created_version.name}")
   screen.addstr(1, 0, f"Version ID: {created_version.id}")
   screen.getch()
   return created_version
