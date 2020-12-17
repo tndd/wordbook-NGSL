@@ -107,10 +107,6 @@ class WordRepository:
     words = self.get_words()
     return list(filter(lambda w: w.is_unanswered(), words))
 
-  def get_words_remains(self) -> List[Word]:
-    words = self.get_words()
-    return list(filter(lambda w: w.is_wrong() | w.is_unanswered(), words))
-
   def regist_test_result(self, word: Word, is_collect: bool) -> None:
     if is_collect:
       insert_test_result(self.version.id, word.id, 1)

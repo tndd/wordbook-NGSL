@@ -83,7 +83,7 @@ def _create_new_version(screen, version_repository):
 
 
 def _test_loop(screen, word_repository):
-  words = word_repository.get_words_remains()
+  words = word_repository.get_words_unanswered()
   random.shuffle(words)
   for i, word in enumerate(words):
     screen.clear()
