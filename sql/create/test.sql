@@ -5,4 +5,5 @@ CREATE TABLE test (
   correct INTEGER NOT NULL,
   PRIMARY KEY(version_id, word_id),
   foreign key(word_id) references word(id)
+  foreign key(version_id) references version(id)
 );
