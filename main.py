@@ -90,7 +90,7 @@ def _test_loop(screen, word_repository):
     screen.clear()
     screen.addstr(0, 0, "[<-]: I didn't know, [->]: I knew", curses.A_DIM)
     screen.addstr(1, 0, f"Remains: {len(words) - i}", curses.A_DIM)
-    screen.addstr(3, 0, word.word, curses.A_BOLD)
+    screen.addstr(3, 0, word.english, curses.A_BOLD)
     screen.getch()
     screen.addstr(5, 0, word.translation)
     while True:

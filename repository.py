@@ -26,7 +26,7 @@ class ResponseStatus(Enum):
 @dataclass
 class Word:
   id: int
-  word: str
+  english: str
   translation: str
   explanation: str
   example: str
@@ -64,7 +64,7 @@ class WordRepository:
   def row_to_model(row: list) -> Word:
     return Word(
       id=row[0],
-      word=row[1],
+      english=row[1],
       translation=row[2],
       explanation=row[3],
       example=row[4],
