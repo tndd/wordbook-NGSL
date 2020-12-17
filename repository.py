@@ -3,10 +3,9 @@ from enum import Enum
 from typing import List, Optional
 
 from db_command import (
-  select_incorrect,
   select_unanswered,
-  select_parent_version,
   select_versions,
+  select_all,
   insert_test_result,
   insert_new_version,
   insert_child_version
@@ -19,6 +18,11 @@ class TestCategory(Enum):
   TSL = 'tsl'
   BSL = 'bsl'
 
+class ResponseStatus(Enum):
+  UNANSERED = None
+  CORRECT = 1
+  WRONG = 0
+
 # datamodels
 @dataclass
 class Word:
@@ -30,6 +34,7 @@ class Word:
   example_translation: str
   pronunciation: str
   meaning_in_english: str
+  response_status: ResponseStatus
 
 @dataclass
 class Version:
@@ -43,7 +48,7 @@ class Version:
   def is_complete(self):
     return self.remains == 0
   
-  def is_child(self):
+  def is_root(self):
     return self.parent_id == None
 
 # repository
@@ -61,7 +66,8 @@ class WordRepository:
       example=row[4],
       example_translation=row[5],
       pronunciation=row[6],
-      meaning_in_english=row[7]
+      meaning_in_english=row[7],
+      response_status=ResponseStatus(row[8])
     )
 
   @classmethod
@@ -77,14 +83,12 @@ class WordRepository:
     return cls(version_id)
   
   def get_words(self) -> List[Word]:
-    parent_version_id = select_parent_version(self.version.id)
-    word_rows = []
-    if parent_version_id:
+    if self.version.is_root():
       # child
-      word_rows = select_incorrect(parent_version_id)
+      word_rows = select_all(self.version.id, self.version.category.value)
     else:
       # origin
-      word_rows = select_unanswered(self.version.id)
+      word_rows = select_all(self.version.parent_id, self.version.category.value)
     return self.rows_to_models(word_rows)
   
   def regist_test_result(self, word: Word, is_collect: bool) -> None:
@@ -135,7 +139,10 @@ class VersionReository:
     return cls.get_by_id(version_id)
   
 if __name__ == "__main__":
-  # wr = WordRepository('6027924c-419f-40ae-8b83-454dfa6cd21a')
+  vr = VersionReository()
+  v = vr.get_by_id('9ae7a909-1257-40df-bb31-eb389c1bd96c')
+  wr = WordRepository(v)
+  print(wr.get_words()[0])
   # words = wr.get_unanswered_words()
   # print(words[0])
   # word = wr.get_words()[0]
@@ -143,9 +150,7 @@ if __name__ == "__main__":
   # wr.regist_test_result(word, True)
   # wr = WordRepository.create_new_version('v0', TestCategory.NGLS)
   # print(wr.version_id)
-  vr = VersionReository()
-  v = vr.get_by_id('9ae7a909-1257-40df-bb31-eb389c1bd96c')
-  print(vr.create_child_version(v, 'tsttst'))
+  # print(vr.create_child_version(v, 'tsttst'))
   # print(v)
   # print(v.is_child())
   # v = vr.create_version('test_test', TestCategory.NAWL)
