@@ -1,7 +1,13 @@
 import curses
 import random
+from enum import Enum, auto
 
 from repository import VersionReository, WordRepository, TestCategory
+
+class TestMode(Enum):
+  STANDARD = auto()
+  REVIEW = auto()
+
 
 def _versions_menu(screen, version_repository):
   versions = version_repository.get_versions()
@@ -22,7 +28,7 @@ def _versions_menu(screen, version_repository):
     screen.addstr(height-1, 0, "[c]: create new test,[i]: Inherit test, [r]: review test")
     key = screen.getch()
     if key == ord('\n'):
-      return versions[y_pos]
+      return versions[y_pos], TestMode.STANDARD
     elif key == ord('j'):
       y_pos = (y_pos + 1) % len(versions)
     elif key == ord('k'):
@@ -33,6 +39,8 @@ def _versions_menu(screen, version_repository):
     elif key == ord('i'):
       _create_child_version(screen, versions[y_pos], version_repository)
       versions = version_repository.get_versions()
+    elif key == ord('r'):
+      return versions[y_pos], TestMode.REVIEW
 
 def _create_child_version(screen, version, version_repository):
   screen.clear()
@@ -82,7 +90,6 @@ def _create_new_version(screen, version_repository):
   screen.getch()
   return created_version
 
-
 def _test_loop(screen, word_repository):
   words = word_repository.get_words_unanswered()
   random.shuffle(words)
@@ -105,14 +112,32 @@ def _test_loop(screen, word_repository):
         continue
   screen.clear()
 
+def _review_loop(screen, word_repository):
+  words = word_repository.get_words_unanswered()
+  random.shuffle(words)
+  for i, word in enumerate(words):
+    screen.clear()
+    screen.addstr(0, 0, "***REVIEW MODE***", curses.A_DIM)
+    screen.addstr(2, 0, "[space]: Show Japanese translation.", curses.A_DIM)
+    screen.addstr(3, 0, f"Remains: {len(words) - i}", curses.A_DIM)
+    screen.addstr(5, 0, word.english)
+    screen.getch()
+    screen.addstr(7, 0, word.translation)
+    screen.getch()
+  screen.clear()
+
 def main(screen):
   curses.start_color()
   vr = VersionReository()
-  version = _versions_menu(screen, vr)
+  version, mode = _versions_menu(screen, vr)
   wr = WordRepository(version)
-  _test_loop(screen, wr)
+  if mode == TestMode.STANDARD:
+    _test_loop(screen, wr)
+  elif mode == TestMode.REVIEW:
+    _review_loop(screen, wr)
   screen.addstr(0, 0, 'Complete Test!')
   screen.getkey()
+
 
 if __name__ == '__main__':
   curses.wrapper(main)
