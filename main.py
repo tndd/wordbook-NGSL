@@ -114,7 +114,7 @@ def _test_loop(screen, word_repository):
   screen.clear()
 
 def _review_loop(screen, word_repository):
-  words = word_repository.get_words_unanswered()
+  words = word_repository.get_words_wrong()
   random.shuffle(words)
   for i, word in enumerate(words):
     screen.clear()
