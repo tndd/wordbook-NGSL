@@ -95,11 +95,12 @@ def _test_loop(screen, word_repository):
   random.shuffle(words)
   for i, word in enumerate(words):
     screen.clear()
-    screen.addstr(0, 0, "[<-]: I didn't know, [->]: I knew", curses.A_DIM)
-    screen.addstr(1, 0, f"Remains: {len(words) - i}", curses.A_DIM)
-    screen.addstr(3, 0, word.english, curses.A_BOLD)
+    screen.addstr(0, 0, "***TEST MODE***", curses.A_DIM)
+    screen.addstr(2, 0, "[<-]: I didn't know, [->]: I knew", curses.A_DIM)
+    screen.addstr(3, 0, f"Remains: {len(words) - i}", curses.A_DIM)
+    screen.addstr(5, 0, word.english, curses.A_BOLD)
     screen.getch()
-    screen.addstr(5, 0, word.translation)
+    screen.addstr(7, 0, word.translation)
     while True:
       key = screen.getch()
       if key == curses.KEY_LEFT:
