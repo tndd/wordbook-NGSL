@@ -3,5 +3,6 @@ CREATE TABLE version (
 	parent_id TEXT,
 	"timestamp" TEXT DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	name TEXT,
-	category TEXT NOT NULL
+	category TEXT NOT NULL,
+	foreign key(parent_id) references version(id)
 );
