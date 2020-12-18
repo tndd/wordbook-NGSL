@@ -7,5 +7,6 @@ CREATE TABLE word(
   example TEXT NOT NULL,
   example_translation TEXT NOT NULL,
   pronunciation TEXT NOT NULL,
-  meaning_in_english TEXT
+  meaning_in_english TEXT,
+  foreign key(category) references word_category(name)
 );

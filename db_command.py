@@ -31,12 +31,16 @@ def get_queries():
     q['CREATE']['TEST'] = f.read()
   with open('sql/create/version.sql', 'r') as f:
     q['CREATE']['VERSION'] = f.read()
+  with open('sql/create/word_category.sql', 'r') as f:
+    q['CREATE']['WORD_CATEGORY'] = f.read()
   with open('sql/insert/word.sql', 'r') as f:
     q['INSERT']['WORD'] = f.read()
   with open('sql/insert/version.sql', 'r') as f:
     q['INSERT']['VERSION'] = f.read()
   with open('sql/insert/test.sql', 'r') as f:
     q['INSERT']['TEST'] = f.read()
+  with open('sql/insert/word_category.sql', 'r') as f:
+    q['INSERT']['WORD_CATEGORY'] = f.read()
   with open('sql/select/version_category.sql', 'r') as f:
     q['SELECT']['VERSION_CATEGORY'] = f.read()
   with open('sql/select/parent_version_id.sql', 'r') as f:
@@ -62,14 +66,15 @@ def init_db():
     print('Reset DB')
     os.remove(DB_PATH)
   connection, cur, q = get_db_tools()
+  categories = ('ngsl', 'nawl', 'tsl', 'bsl')
   try:
+    cur.execute(q['CREATE']['WORD_CATEGORY'])
     cur.execute(q['CREATE']['WORD'])
     cur.execute(q['CREATE']['TEST'])
     cur.execute(q['CREATE']['VERSION'])
-    cur.executemany(q['INSERT']['WORD'], read_values('ngsl'))
-    cur.executemany(q['INSERT']['WORD'], read_values('nawl'))
-    cur.executemany(q['INSERT']['WORD'], read_values('tsl'))
-    cur.executemany(q['INSERT']['WORD'], read_values('bsl'))
+    for category in categories:
+      cur.execute(q['INSERT']['WORD_CATEGORY'], (category,))
+      cur.executemany(q['INSERT']['WORD'], read_values(category))
     connection.commit()
   except Exception as e:
     print(e)
@@ -138,7 +143,7 @@ def insert_test_result(version_id, word_id, collect):
 
 
 if __name__ == "__main__":
-  # init_db()
+  init_db()
   # print(select_incorrect('6027924c-419f-40ae-8b83-454dfa6cd21a_')[:10])
   # print(select_unanswered('6027924c-419f-40ae-8b83-454dfa6cd21')[:10])
   # insert_new_version('v3', 'ngsl')
@@ -146,4 +151,4 @@ if __name__ == "__main__":
   # insert_test_result('6027924c-419f-40ae-8b83-454dfa6cd21a', 3, 0)
   # print(select_parent_version('8c12360b-7598-4579-81d1-07658e56c2cb_'))
   # print(select_versions())
-  print(select_all('6027924c-419f-40ae-8b83-454dfa6cd21a', 'ngsl'))
+  # print(select_all('6027924c-419f-40ae-8b83-454dfa6cd21a', 'ngsl'))
