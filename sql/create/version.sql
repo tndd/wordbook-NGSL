@@ -4,5 +4,6 @@ CREATE TABLE version (
 	"timestamp" TEXT DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	name TEXT,
 	category TEXT NOT NULL,
-	foreign key(parent_id) references version(id)
+	foreign key(parent_id) references version(id),
+	foreign key(category) references word_category(name)
 );
