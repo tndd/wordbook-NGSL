@@ -83,10 +83,10 @@ def _create_new_version(screen, version_repository):
       break
   screen.clear()
   created_version = version_repository.create_version(name, category)
-  screen.addstr(0, 0, f"NEW TEST IS CREATED!")
-  screen.addstr(1, 0, f"Name\t{created_version.name}")
-  screen.addstr(2, 0, f"Version ID\t{created_version.id}")
-  screen.addstr(3, 0, f"Test category\t{created_version.category.name}")
+  screen.addstr(0, 0, f"***NEW TEST IS CREATED!***")
+  screen.addstr(2, 0, f"Name\t{created_version.name}")
+  screen.addstr(3, 0, f"Version ID\t{created_version.id}")
+  screen.addstr(4, 0, f"Test category\t{created_version.category.name}")
   screen.getch()
   return created_version
 
